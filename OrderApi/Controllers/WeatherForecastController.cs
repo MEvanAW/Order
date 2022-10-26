@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using OrderApi.Models;
 
 namespace OrderApi.Controllers
 {
