@@ -2,8 +2,8 @@
 {
     public class Order
     {
-        public uint Id { get; set; }
-        public string? CustomerName { get; set; }
-        public DateTime OrderedAt { get; set; }
+        public uint id { get; set; }
+        public string? customer_name { get; set; }
+        public DateTime ordered_at { get; set; }
     }
 }

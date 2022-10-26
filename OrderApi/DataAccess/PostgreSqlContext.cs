@@ -8,7 +8,7 @@ namespace OrderApi.DataAccess
         public PostgreSqlContext(DbContextOptions<PostgreSqlContext> options): base(options)
         { 
         }
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<Order> orders { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

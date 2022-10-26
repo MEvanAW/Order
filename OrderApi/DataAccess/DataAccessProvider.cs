@@ -15,7 +15,7 @@ namespace OrderApi.DataAccess
 
         public void AddOrderRecord(Order order)
         {
-            _context.Orders.Add(order);
+            _context.orders.Add(order);
             _context.SaveChanges();
         }
 
@@ -26,23 +26,23 @@ namespace OrderApi.DataAccess
             {
                 throw new ArgumentNullException(null, "Order with ID " + id + " is not found.");
             }
-            _context.Orders.Remove(entity);
+            _context.orders.Remove(entity);
             _context.SaveChanges();
         }
 
         public List<Order> GetAllOrders()
         {
-            return _context.Orders.ToList();
+            return _context.orders.ToList();
         }
 
         public Order? GetOrderSingleRecord(uint id)
         {
-            return _context.Orders.FirstOrDefault(o => o.Id == id);
+            return _context.orders.FirstOrDefault(o => o.id == id);
         }
 
         public void UpdateOrderRecord(Order order)
         {
-            _context.Orders.Update(order);
+            _context.orders.Update(order);
             _context.SaveChanges();
         }
     }

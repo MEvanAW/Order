@@ -62,7 +62,7 @@ namespace OrderApi.Controllers
                 }
                 catch
                 {
-                    return NotFound("Order with ID " + order.Id + " is not found.");
+                    return NotFound("Order with ID " + order.id + " is not found.");
                 }
                 return Ok(order);
             }
