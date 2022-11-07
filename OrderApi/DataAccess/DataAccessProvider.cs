@@ -13,10 +13,24 @@ namespace OrderApi.DataAccess
             _context = context;
         }
 
-        public void AddOrderRecord(Order order)
+        /// <summary>
+        /// Add an order to DB
+        /// </summary>
+        /// <param name="order">The order</param>
+        /// <param name="items">The items associated with the order</param>
+        /// <returns>True if no error occurs. False if an error occurs.</returns>
+        public bool AddOrderRecord(Order order, IEnumerable<Item> items)
         {
-            _context.orders.Add(order);
+            var entity = _context.orders.Add(order);
+            var orderId = entity.CurrentValues["id"];
+            foreach (Item item in items)
+            {
+                try { item.order_id = (uint) orderId; }
+                catch { return false; }
+            }
+            _context.items.AddRange(items);
             _context.SaveChanges();
+            return true;
         }
 
         public void DeleteOrderRecord(uint id)
