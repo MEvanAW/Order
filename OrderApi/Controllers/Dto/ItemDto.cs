@@ -1,4 +1,4 @@
-﻿namespace OrderApi.Dto
+﻿namespace OrderApi.Controllers.Dto
 {
     public class ItemDto
     {
@@ -11,7 +11,7 @@
         /// Description of the item
         /// </summary>
         /// <example>Samsung Galaxy A32</example>
-        public string Description { get; set; }
+        public string? Description { get; set; }
         /// <summary>
         /// Quantity of the item
         /// </summary>

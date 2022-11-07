@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OrderApi.DataAccess;
+using OrderApi.Controllers.Dto;
 using OrderApi.Models;
 
 namespace OrderApi.Controllers
@@ -64,8 +65,8 @@ namespace OrderApi.Controllers
         /// <summary>
         /// Create an order
         /// </summary>
-        /// <remarks>Create an order including its items, if provided.</remarks>
-        /// <param name="order">Order to be made.</param>
+        /// <remarks>Create an order including its item(s). Item(s) are mandatory.</remarks>
+        /// <param name="orderDto">Order to be made.</param>
         /// <response code="200">Order created.</response>
         /// <response code="400">Body format is not recognized.</response>
         /// <response code="500">Internal server error</response>
@@ -73,12 +74,29 @@ namespace OrderApi.Controllers
         [ProducesResponseType(typeof(Order), 200)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(500)]
-        public IActionResult Create([FromBody]Order order)
+        public IActionResult Create([FromBody]OrderDto orderDto)
         {
             if (ModelState.IsValid)
             {
-                _dataAccessProvider.AddOrderRecord(order);
-                return Ok(order);
+                if (orderDto.Items == null)
+                {
+                    return BadRequest("Item is not detected on the body.");
+                }
+                Order order = new Order(orderDto.CustomerName, orderDto.OrderedAt);
+                var items = new List<Item>();
+                foreach (var item in orderDto.Items)
+                {
+                    var newItem = new Item(item.ItemCode, item.Quantity);
+                    if (item.Description != null)
+                        newItem.description = item.Description;
+                    items.Add(newItem);
+                }
+                bool ok = _dataAccessProvider.AddOrderRecord(order, items);
+                if (ok)
+                {
+                    return Ok(order);
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
             return BadRequest("Body format is not recognized.");
         }

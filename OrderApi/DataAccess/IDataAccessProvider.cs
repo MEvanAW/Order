@@ -1,11 +1,10 @@
 ﻿using OrderApi.Models;
-using System.Collections.Generic;
 
 namespace OrderApi.DataAccess
 {
     public interface IDataAccessProvider
     {
-        void AddOrderRecord(Order order);
+        bool AddOrderRecord(Order order, IEnumerable<Item> items);
         void UpdateOrderRecord(Order order);
         void DeleteOrderRecord(uint id);
         Order? GetOrderSingleRecord(uint id);
