@@ -16,6 +16,10 @@
         /// DateTime the order was placed
         /// </summary>
         public DateTime ordered_at { get; set; }
+        /// <summary>
+        /// Items associated with the order
+        /// </summary>
+        public IEnumerable<Item>? Items { get; set; }
 
         // Constructors
         public Order(string? customer_name, DateTime ordered_at)

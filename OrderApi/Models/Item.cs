@@ -1,4 +1,6 @@
-﻿namespace OrderApi.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OrderApi.Models
 {
     public class Item
     {
@@ -26,7 +28,8 @@
         /// ID of the order the item is part of
         /// </summary>
         /// <example>1</example>
-        public uint order_id { get; set; }
+        [Column("order_id")]
+        public uint OrderId { get; set; }
 
         // constructors
         public Item(string item_code, uint quantity)

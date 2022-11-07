@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OrderApi.DataAccess;
-using OrderApi.Dto;
+using OrderApi.Controllers.Dto;
 using OrderApi.Models;
 
 namespace OrderApi.Controllers
