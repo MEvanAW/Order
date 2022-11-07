@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OrderApi.DataAccess;
-using OrderApi.Controllers.Dto;
+using OrderApi.Dto;
 using OrderApi.Models;
 
 namespace OrderApi.Controllers
@@ -83,14 +83,7 @@ namespace OrderApi.Controllers
                     return BadRequest("Item is not detected on the body.");
                 }
                 Order order = new Order(orderDto.CustomerName, orderDto.OrderedAt);
-                var items = new List<Item>();
-                foreach (var item in orderDto.Items)
-                {
-                    var newItem = new Item(item.ItemCode, item.Quantity);
-                    if (item.Description != null)
-                        newItem.description = item.Description;
-                    items.Add(newItem);
-                }
+                var items = ToItemList(orderDto.Items);
                 bool ok = _dataAccessProvider.AddOrderRecord(order, items);
                 if (ok)
                 {
@@ -105,7 +98,8 @@ namespace OrderApi.Controllers
         /// Update an order
         /// </summary>
         /// <remarks>Update order by ID including its items. Previous items are discarded.</remarks>
-        /// <param name="order">Order to be updated.</param>
+        /// <param name="id" example="1">The order id</param>
+        /// <param name="orderDto">Order to be updated.</param>
         /// <response code="200">Order updated.</response>
         /// <response code="400">Body format is not recognized.</response>
         /// <response code="404">Order is not found.</response>
@@ -115,18 +109,32 @@ namespace OrderApi.Controllers
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(500)]
-        public IActionResult Edit([FromBody]Order order)
+        public IActionResult Edit(string id, [FromBody]OrderDto orderDto)
         {
             if (ModelState.IsValid)
             {
+                if (orderDto.Items == null)
+                {
+                    return BadRequest("Item is not detected on the body.");
+                }
+                uint parsedId;
                 try
                 {
-                    _dataAccessProvider.UpdateOrderRecord(order);
+                    parsedId = Convert.ToUInt32(id);
                 }
                 catch
                 {
-                    return NotFound("Order with ID " + order.id + " is not found.");
+                    return BadRequest("Id format is not recognized.");
                 }
+                var order = _dataAccessProvider.GetOrderSingleRecord(parsedId);
+                if (order == null)
+                {
+                    return NotFound("Order with ID " + parsedId + " is not found.");
+                }
+                order.ordered_at = orderDto.OrderedAt;
+                order.customer_name = orderDto.CustomerName;
+                var items = ToItemList(orderDto.Items);
+                _dataAccessProvider.UpdateOrderRecord(order, items);
                 return Ok(order);
             }
             return BadRequest("Body format is not recognized.");
@@ -170,6 +178,19 @@ namespace OrderApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
             return Ok("Order with ID " + parsedId + " has been successfully deleted.");
+        }
+
+        private List<Item> ToItemList(IEnumerable<ItemDto> items)
+        {
+            var returnList = new List<Item>();
+            foreach (var item in items)
+            {
+                var newItem = new Item(item.ItemCode, item.Quantity);
+                if (item.Description != null)
+                    newItem.description = item.Description;
+                returnList.Add(newItem);
+            }
+            return returnList;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using OrderApi.Models;
+﻿using Microsoft.AspNetCore.Components.Web.Virtualization;
+using OrderApi.Models;
 
 namespace OrderApi.DataAccess
 {
@@ -23,8 +24,14 @@ namespace OrderApi.DataAccess
             var orderId = entity.CurrentValues["id"];
             foreach (Item item in items)
             {
-                try { item.OrderId = (uint) orderId; }
-                catch { return false; }
+                try
+                {
+                    item.OrderId = (uint) orderId;
+                }
+                catch
+                {
+                    return false;
+                }
             }
             _context.items.AddRange(items);
             _context.SaveChanges();
@@ -47,7 +54,7 @@ namespace OrderApi.DataAccess
             var list = _context.orders.ToList();
             foreach (var order in list)
             {
-                order.Items = _context.items.Where(i => i.OrderId == order.id).ToList();
+                order.Items = GetItemsOfOrderId(order.id);
             }
             return list;
         }
@@ -56,14 +63,54 @@ namespace OrderApi.DataAccess
         {
             var order = _context.orders.FirstOrDefault(o => o.id == id);
             if (order != null)
-                order.Items = _context.items.Where(i => i.OrderId == order.id).ToList();
+            {
+                order.Items = GetItemsOfOrderId(order.id);
+            }
             return order;
         }
 
-        public void UpdateOrderRecord(Order order)
+        public void UpdateOrderRecord(Order order, List<Item> items)
         {
+            int len = order.Items!.Count();
+            bool isLonger = false;
+            if (len > items.Count)
+            {
+                len = items.Count;
+                isLonger = true;
+            }
+            for (int i = 0; i < len; i++)
+            {
+                order.Items!.ElementAt(i).item_code = items[i].item_code;
+                order.Items!.ElementAt(i).description = items[i].description;
+                order.Items!.ElementAt(i).quantity = items[i].quantity;
+            }
+            if (!isLonger)
+            {
+                order.Items = order.Items!.Concat(items.GetRange(len, items.Count-len)).ToList();
+            }
             _context.orders.Update(order);
+            if (isLonger)
+            {
+                List<Item> itemList;
+                if (order.Items is List<Item>)
+                {
+                    itemList = (List<Item>) order.Items;
+                }
+                else
+                {
+                    itemList = order.Items!.ToList();
+                    // TODO: check if itemList needs to be assigned to order.Items
+                }
+                List<Item> itemRange = itemList.GetRange(len, itemList.Count - len);
+                _context.items.RemoveRange(itemRange);
+                itemRange.Clear();
+            }
             _context.SaveChanges();
+        }
+
+        public List<Item> GetItemsOfOrderId(uint id)
+        {
+            return _context.items.Where(i => i.OrderId == id).ToList();
         }
     }
 }

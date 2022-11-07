@@ -1,4 +1,4 @@
-﻿namespace OrderApi.Controllers.Dto
+﻿namespace OrderApi.Dto
 {
     public class OrderDto
     {
