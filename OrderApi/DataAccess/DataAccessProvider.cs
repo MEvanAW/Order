@@ -54,7 +54,10 @@ namespace OrderApi.DataAccess
 
         public Order? GetOrderSingleRecord(uint id)
         {
-            return _context.orders.FirstOrDefault(o => o.id == id);
+            var order = _context.orders.FirstOrDefault(o => o.id == id);
+            if (order != null)
+                order.Items = _context.items.Where(i => i.OrderId == order.id).ToList();
+            return order;
         }
 
         public void UpdateOrderRecord(Order order)
