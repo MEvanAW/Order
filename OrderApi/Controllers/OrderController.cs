@@ -11,6 +11,7 @@ namespace OrderApi.Controllers
     public class OrderController : Controller
     {
         private readonly IDataAccessProvider _dataAccessProvider;
+        private readonly string _badBody = "Missing attribute or body format is not recognized.";
 
         public OrderController(IDataAccessProvider dataAccessProvider)
         {
@@ -98,7 +99,7 @@ namespace OrderApi.Controllers
                 {
                     return BadRequest("Item is not detected on the body.");
                 }
-                Order order = new Order(orderDto.CustomerName, orderDto.OrderedAt);
+                Order order = new Order(orderDto.CustomerName, (DateTime) orderDto.OrderedAt!);
                 var items = ToItemList(orderDto.Items);
                 bool ok = _dataAccessProvider.AddOrderRecord(order, items);
                 if (ok)
@@ -107,7 +108,7 @@ namespace OrderApi.Controllers
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            return BadRequest("Body format is not recognized.");
+            return BadRequest(_badBody);
         }
 
         /// <summary>
@@ -152,13 +153,13 @@ namespace OrderApi.Controllers
                 {
                     return NotFound("Order with ID " + parsedId + " is not found.");
                 }
-                order.ordered_at = orderDto.OrderedAt;
+                order.ordered_at = (DateTime) orderDto.OrderedAt!;
                 order.customer_name = orderDto.CustomerName;
                 var items = ToItemList(orderDto.Items);
                 _dataAccessProvider.UpdateOrderRecord(order, items);
                 return Ok(order);
             }
-            return BadRequest("Body format is not recognized.");
+            return BadRequest(_badBody);
         }
 
         /// <summary>
@@ -211,7 +212,7 @@ namespace OrderApi.Controllers
             var returnList = new List<Item>();
             foreach (var item in items)
             {
-                var newItem = new Item(item.ItemCode, item.Quantity);
+                var newItem = new Item(item.ItemCode!, (uint) item.Quantity!);
                 if (item.Description != null)
                     newItem.description = item.Description;
                 returnList.Add(newItem);

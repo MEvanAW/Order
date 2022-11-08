@@ -1,4 +1,6 @@
-﻿namespace OrderApi.Dto
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OrderApi.Dto
 {
     public class OrderDto
     {
@@ -10,10 +12,12 @@
         /// <summary>
         /// DateTime the order was placed
         /// </summary>
-        public DateTime OrderedAt { get; set; }
+        [Required]
+        public DateTime? OrderedAt { get; set; }
         /// <summary>
         /// Items included in the order
         /// </summary>
+        [Required]
         public IEnumerable<ItemDto>? Items { get; set; }
     }
 }
