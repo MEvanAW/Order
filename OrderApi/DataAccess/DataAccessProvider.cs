@@ -26,7 +26,7 @@ namespace OrderApi.DataAccess
             {
                 try
                 {
-                    item.OrderId = (uint) orderId;
+                    item.OrderID = (uint) orderId;
                 }
                 catch
                 {
@@ -54,17 +54,17 @@ namespace OrderApi.DataAccess
             var list = _context.orders.ToList();
             foreach (var order in list)
             {
-                order.Items = GetItemsOfOrderId(order.id);
+                order.Items = GetItemsOfOrderId(order.ID);
             }
             return list;
         }
 
         public Order? GetOrderSingleRecord(uint id)
         {
-            var order = _context.orders.FirstOrDefault(o => o.id == id);
+            var order = _context.orders.FirstOrDefault(o => o.ID == id);
             if (order != null)
             {
-                order.Items = GetItemsOfOrderId(order.id);
+                order.Items = GetItemsOfOrderId(order.ID);
             }
             return order;
         }
@@ -108,9 +108,9 @@ namespace OrderApi.DataAccess
             _context.SaveChanges();
         }
 
-        public List<Item> GetItemsOfOrderId(uint id)
+        private List<Item> GetItemsOfOrderId(uint id)
         {
-            return _context.items.Where(i => i.OrderId == id).ToList();
+            return _context.items.Where(i => i.OrderID == id).ToList();
         }
     }
 }

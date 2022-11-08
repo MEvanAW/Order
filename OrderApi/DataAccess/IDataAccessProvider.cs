@@ -9,6 +9,5 @@ namespace OrderApi.DataAccess
         void DeleteOrderRecord(uint id);
         Order? GetOrderSingleRecord(uint id);
         List<Order> GetAllOrders();
-        List<Item> GetItemsOfOrderId(uint id);
     }
 }

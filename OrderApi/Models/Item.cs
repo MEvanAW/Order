@@ -29,7 +29,7 @@ namespace OrderApi.Models
         /// </summary>
         /// <example>1</example>
         [Column("order_id")]
-        public uint OrderId { get; set; }
+        public uint OrderID { get; set; }
 
         // constructors
         public Item(string item_code, uint quantity)

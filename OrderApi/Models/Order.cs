@@ -1,4 +1,6 @@
-﻿namespace OrderApi.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OrderApi.Models
 {
     public class Order
     {
@@ -6,7 +8,8 @@
         /// ID of the order
         /// </summary>
         /// <example>1</example>
-        public uint id { get; set; }
+        [Column("id")]
+        public uint ID { get; set; }
         /// <summary>
         /// Name of the customer placing the order
         /// </summary>
