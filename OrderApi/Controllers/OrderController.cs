@@ -7,6 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace OrderApi.Controllers
 {
     [Route("orders")]
+    [SwaggerTag("Create, read, update, and delete Orders")]
     public class OrderController : Controller
     {
         private readonly IDataAccessProvider _dataAccessProvider;
@@ -89,7 +90,7 @@ namespace OrderApi.Controllers
             Description = "Create an order including its item(s). Item(s) are mandatory.",
             OperationId = "CreateOrder"
         )]
-        public IActionResult Create([FromBody]OrderDto orderDto)
+        public IActionResult Create([FromBody, SwaggerRequestBody("The order payload", Required = true)] OrderDto orderDto)
         {
             if (ModelState.IsValid)
             {
@@ -129,7 +130,7 @@ namespace OrderApi.Controllers
             Description = "Update order by ID including its items. Previous items are discarded.",
             OperationId = "UpdateOrder"
         )]
-        public IActionResult Edit(string id, [FromBody]OrderDto orderDto)
+        public IActionResult Edit(string id, [FromBody, SwaggerRequestBody("The order payload", Required = true)]OrderDto orderDto)
         {
             if (ModelState.IsValid)
             {
