@@ -2,6 +2,7 @@
 using OrderApi.DataAccess;
 using OrderApi.Dto;
 using OrderApi.Models;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace OrderApi.Controllers
 {
@@ -18,21 +19,25 @@ namespace OrderApi.Controllers
         /// <summary>
         /// Get all orders
         /// </summary>
-        /// <remarks>Get all orders.</remarks>
         /// <response code="200">All orders retrieved</response>
         /// <response code="500">Internal server error</response>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Order>), 200)]
         [ProducesResponseType(500)]
+        [SwaggerOperation(
+            Summary = "Get all orders",
+            Description = "Get all orders.",
+            OperationId = "GetAllOrders"
+        )]
         public IActionResult Get()
         {
             return Ok(_dataAccessProvider.GetAllOrders());
         }
 
         /// <summary>
-        /// Retrieves a specific order by unique id
+        /// Get an order
         /// </summary>
-        /// <remarks>Get an order.</remarks>
+        /// <remarks>Retrieves a specific order by unique id.</remarks>
         /// <param name="id" example="1">The order id</param>
         /// <response code="200">Order retrieved</response>
         /// <response code="400">Id format is not recognized</response>
@@ -43,6 +48,11 @@ namespace OrderApi.Controllers
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(500)]
+        [SwaggerOperation(
+            Summary = "Get an order",
+            Description = "Retrieves a specific order by unique id.",
+            OperationId = "GetOrder"
+        )]
         public IActionResult Get(string id)
         {
             uint parsedId = 0;
@@ -74,6 +84,11 @@ namespace OrderApi.Controllers
         [ProducesResponseType(typeof(Order), 200)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(500)]
+        [SwaggerOperation(
+            Summary = "Create an order",
+            Description = "Create an order including its item(s). Item(s) are mandatory.",
+            OperationId = "CreateOrder"
+        )]
         public IActionResult Create([FromBody]OrderDto orderDto)
         {
             if (ModelState.IsValid)
@@ -109,6 +124,11 @@ namespace OrderApi.Controllers
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(500)]
+        [SwaggerOperation(
+            Summary = "Update an order",
+            Description = "Update order by ID including its items. Previous items are discarded.",
+            OperationId = "UpdateOrder"
+        )]
         public IActionResult Edit(string id, [FromBody]OrderDto orderDto)
         {
             if (ModelState.IsValid)
@@ -141,7 +161,7 @@ namespace OrderApi.Controllers
         }
 
         /// <summary>
-        /// Delete an order.
+        /// Delete an order
         /// </summary>
         /// <remarks>Delete order by ID including its items.</remarks>
         /// <param name="id">ID number of the order to be deleted.</param>
@@ -154,6 +174,11 @@ namespace OrderApi.Controllers
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(500)]
+        [SwaggerOperation(
+            Summary = "Delete an order",
+            Description = "Delete order by ID including its items.",
+            OperationId = "DeleteOrder"
+        )]
         public IActionResult Delete(string id)
         {
             uint parsedId = 0;
