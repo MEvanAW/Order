@@ -1,4 +1,5 @@
-﻿using OrderApi.Models;
+﻿using OrderApi.Dto;
+using OrderApi.Models;
 
 namespace OrderApi.DataAccess
 {
@@ -9,5 +10,6 @@ namespace OrderApi.DataAccess
         void DeleteOrderRecord(uint id);
         Order? GetOrderSingleRecord(uint id);
         List<Order> GetAllOrders();
+        bool CreateUser(UserDto user);
     }
 }

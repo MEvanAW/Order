@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Web.Virtualization;
+﻿using OrderApi.Dto;
 using OrderApi.Models;
 
 namespace OrderApi.DataAccess
@@ -106,6 +106,12 @@ namespace OrderApi.DataAccess
                 itemRange.Clear();
             }
             _context.SaveChanges();
+        }
+
+        public bool CreateUser(UserDto user)
+        {
+            // TODO: Implement create user
+            return false;
         }
 
         private List<Item> GetItemsOfOrderId(uint id)
