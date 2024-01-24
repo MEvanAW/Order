@@ -11,7 +11,7 @@ namespace OrderApi.Controllers
     public class OrderController : Controller
     {
         private readonly IDataAccessProvider _dataAccessProvider;
-        private readonly string _badBody = "Missing attribute or body format is not recognized.";
+        private const string BAD_BODY = "Missing attribute or body format is not recognized.";
 
         public OrderController(IDataAccessProvider dataAccessProvider)
         {
@@ -57,7 +57,7 @@ namespace OrderApi.Controllers
         )]
         public IActionResult Get(string id)
         {
-            uint parsedId = 0;
+            uint parsedId;
             try
             {
                 parsedId = Convert.ToUInt32(id);
@@ -100,7 +100,7 @@ namespace OrderApi.Controllers
                     return BadRequest("Item is not detected on the body.");
                 }
                 Order order = new Order(orderDto.CustomerName, (DateTime) orderDto.OrderedAt!);
-                var items = ToItemList(orderDto.Items);
+                var items = _ToItemList(orderDto.Items);
                 bool ok = _dataAccessProvider.AddOrderRecord(order, items);
                 if (ok)
                 {
@@ -108,7 +108,7 @@ namespace OrderApi.Controllers
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            return BadRequest(_badBody);
+            return BadRequest(BAD_BODY);
         }
 
         /// <summary>
@@ -155,11 +155,11 @@ namespace OrderApi.Controllers
                 }
                 order.ordered_at = (DateTime) orderDto.OrderedAt!;
                 order.customer_name = orderDto.CustomerName;
-                var items = ToItemList(orderDto.Items);
+                var items = _ToItemList(orderDto.Items);
                 _dataAccessProvider.UpdateOrderRecord(order, items);
                 return Ok(order);
             }
-            return BadRequest(_badBody);
+            return BadRequest(BAD_BODY);
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace OrderApi.Controllers
         )]
         public IActionResult Delete(string id)
         {
-            uint parsedId = 0;
+            uint parsedId;
             try
             {
                 parsedId = Convert.ToUInt32(id);
@@ -207,7 +207,7 @@ namespace OrderApi.Controllers
             return Ok("Order with ID " + parsedId + " has been successfully deleted.");
         }
 
-        private List<Item> ToItemList(IEnumerable<ItemDto> items)
+        private static List<Item> _ToItemList(IEnumerable<ItemDto> items)
         {
             var returnList = new List<Item>();
             foreach (var item in items)

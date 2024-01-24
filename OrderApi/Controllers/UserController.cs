@@ -11,7 +11,7 @@ namespace OrderApi.Controllers
     public class UserController : Controller
     {
         private readonly IDataAccessProvider _dataAccessProvider;
-        private readonly string _badBody = "Missing attribute or body format is not recognized.";
+        private readonly string BAD_BODY = "Missing attribute or body format is not recognized.";
 
         public UserController(IDataAccessProvider dataAccessProvider)
         {
@@ -41,7 +41,7 @@ namespace OrderApi.Controllers
             {
                 return Created("", "Dummy OK Created");
             }
-            return BadRequest(_badBody);
+            return BadRequest(BAD_BODY);
         }
     }
 }
