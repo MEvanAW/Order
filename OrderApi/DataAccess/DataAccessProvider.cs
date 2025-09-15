@@ -21,7 +21,7 @@ namespace OrderApi.DataAccess
         public bool AddOrderRecord(Order order, IEnumerable<Item> items)
         {
             var entity = _context.orders.Add(order);
-            var orderId = entity.CurrentValues["id"];
+            var orderId = entity.CurrentValues[nameof(order.ID)];
             foreach (Item item in items)
             {
                 try
