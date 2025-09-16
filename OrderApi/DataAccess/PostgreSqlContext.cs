@@ -8,9 +8,9 @@ namespace OrderApi.DataAccess
         public PostgreSqlContext(DbContextOptions<PostgreSqlContext> options): base(options)
         {
         }
-        public DbSet<Order> orders { get; set; }
-        public DbSet<Item> items { get; set; }
-        public DbSet<User> users { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Order>().ToTable("orders");

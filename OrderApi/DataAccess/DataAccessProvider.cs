@@ -20,7 +20,7 @@ namespace OrderApi.DataAccess
         /// <returns>True if no error occurs. False if an error occurs.</returns>
         public bool AddOrderRecord(Order order, IEnumerable<Item> items)
         {
-            var entity = _context.orders.Add(order);
+            var entity = _context.Orders.Add(order);
             var orderId = entity.CurrentValues[nameof(order.ID)];
             foreach (Item item in items)
             {
@@ -33,7 +33,7 @@ namespace OrderApi.DataAccess
                     return false;
                 }
             }
-            _context.items.AddRange(items);
+            _context.Items.AddRange(items);
             _context.SaveChanges();
             return true;
         }
@@ -45,13 +45,13 @@ namespace OrderApi.DataAccess
             {
                 throw new ArgumentNullException(null, "Order with ID " + id + " is not found.");
             }
-            _context.orders.Remove(entity);
+            _context.Orders.Remove(entity);
             _context.SaveChanges();
         }
 
         public List<Order> GetAllOrders()
         {
-            var list = _context.orders.ToList();
+            var list = _context.Orders.ToList();
             foreach (var order in list)
             {
                 order.Items = GetItemsOfOrderId(order.ID);
@@ -61,7 +61,7 @@ namespace OrderApi.DataAccess
 
         public Order? GetOrderSingleRecord(uint id)
         {
-            var order = _context.orders.FirstOrDefault(o => o.ID == id);
+            var order = _context.Orders.FirstOrDefault(o => o.ID == id);
             if (order != null)
             {
                 order.Items = GetItemsOfOrderId(order.ID);
@@ -88,7 +88,7 @@ namespace OrderApi.DataAccess
             {
                 order.Items = order.Items!.Concat(items.GetRange(len, items.Count-len)).ToList();
             }
-            _context.orders.Update(order);
+            _context.Orders.Update(order);
             if (isLonger)
             {
                 List<Item> itemList;
@@ -102,7 +102,7 @@ namespace OrderApi.DataAccess
                     // TODO: check if itemList needs to be assigned to order.Items
                 }
                 List<Item> itemRange = itemList.GetRange(len, itemList.Count - len);
-                _context.items.RemoveRange(itemRange);
+                _context.Items.RemoveRange(itemRange);
                 itemRange.Clear();
             }
             _context.SaveChanges();
@@ -116,7 +116,7 @@ namespace OrderApi.DataAccess
 
         private List<Item> GetItemsOfOrderId(uint id)
         {
-            return _context.items.Where(i => i.OrderID == id).ToList();
+            return _context.Items.Where(i => i.OrderID == id).ToList();
         }
     }
 }

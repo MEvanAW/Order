@@ -4,7 +4,7 @@ namespace OrderApi.Models
 {
     public class User
     {
-        [Column("order_id")]
+        [Column("user_id")]
         public uint Id { get; set; }
         [Column("username")]
         public string Username { get; set; }
