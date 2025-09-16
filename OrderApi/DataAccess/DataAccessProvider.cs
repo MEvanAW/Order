@@ -92,14 +92,13 @@ namespace OrderApi.DataAccess
             if (isLonger)
             {
                 List<Item> itemList;
-                if (order.Items is List<Item>)
+                if (order.Items is List<Item> matchedList)
                 {
-                    itemList = (List<Item>) order.Items;
+                    itemList = matchedList;
                 }
                 else
                 {
                     itemList = order.Items!.ToList();
-                    // TODO: check if itemList needs to be assigned to order.Items
                 }
                 List<Item> itemRange = itemList.GetRange(len, itemList.Count - len);
                 _context.Items.RemoveRange(itemRange);
